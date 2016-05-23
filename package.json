@@ -2,6 +2,7 @@
   "name": "agilestack-login-ui",
   "version": "0.0.1-SNAPSHOT.20",
   "description": "Quick setup for Plugin with UI on AgileStack",
+  "main": "lib/index.js",
   "files": [
     "lib"
   ],
@@ -71,7 +72,7 @@
     "test": "mocha --compilers js:babel-core/register --recursive",
     "test:watch": "npm test -- --watch",
     "start": "cross-env NODE_ENV=development API_ENV=development node server.dev.js",
-    "build": "npm run test && cross-env NODE_ENV=production API_ENV=local webpack --config webpack.prod.config.js --progress --colors -p",
+    "build": "npm run test && cross-env NODE_ENV=production API_ENV=production webpack --config webpack.prod.config.js --progress --colors -p",
     "build:lib": "cross-env NODE_ENV=production babel --presets react,stage-2 js --out-dir lib",
     "serve": "cross-env NODE_ENV=production node server.prod.js"
   },
