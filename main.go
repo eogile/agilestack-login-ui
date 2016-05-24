@@ -38,12 +38,14 @@ func startHttp() {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/status", plugins.HandleHttpStatusUrl).Methods("GET")
-	r.PathPrefix("/").Handler(http.FileServer(http.Dir(rootDir))).Methods("GET")
 	r.HandleFunc("/", login).Methods("POST")
+	r.HandleFunc("/user", currentUser).Methods("GET")
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir(rootDir))).Methods("GET")
 
 	log.Println("Server started: http://localhost:" + httpPort)
 	handler := cors.New(cors.Options{
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedHeaders: []string{"tokenInfo", "content-type"},
 	}).Handler(r)
 	//loggedRouter := handlers.LoggingHandler(os.Stdout, handler)
 	err := http.ListenAndServe(":"+httpPort, handler)
@@ -81,6 +83,24 @@ func login(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(token)
+}
+
+func currentUser(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+
+	tokenInfo := r.Header.Get("tokenInfo")
+	log.Printf("getUser - tokenInfo = %v", tokenInfo)
+	user, err, respCode := hydraClient.GetUser(&auth.TokenInfo{TokenInfo: tokenInfo})
+	if err != nil {
+		log.Printf("Error getting user : %v", err)
+		http.Error(w, err.Error(), respCode)
+		return
+	}
+
+	// Return the users
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "no-cache")
+	json.NewEncoder(w).Encode(user)
 }
 
 func main() {

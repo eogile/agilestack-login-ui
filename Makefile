@@ -2,7 +2,7 @@ NAME		= login-ui
 IMAGE_NAME	= agilestack-$(NAME)
 
 GO_FILES=*.go
-JS_FILE=js/* js/*/* js/*/*/*
+JS_FILES=js/*.js js/*/*.js js/*/*/*.js
 
 
 ############################
@@ -21,7 +21,7 @@ node_modules : package.json
 		npm update
 		touch node_modules
 
-lib: $(JS_FILE)
+lib: $(JS_FILES)
 		npm run build:lib
 		touch lib
 
