@@ -8,7 +8,7 @@
   ],
   "dependencies": {
     "fontfaceobserver": "^1.5.1",
-    "formsy-material-ui": "0.3.8",
+    "formsy-material-ui": "^0.4.3",
     "formsy-react": "^0.18.0",
     "history": "^2.1.1",
     "isomorphic-fetch": "^2.2.1",
@@ -68,7 +68,8 @@
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.6",
     "webpack": "^1.12.1",
-    "webpack-dev-server": "^1.11.0"
+    "webpack-dev-server": "^1.11.0",
+    "webpack-fail-plugin": "^1.0.4"
   },
   "scripts": {
     "lint": "eslint .",
