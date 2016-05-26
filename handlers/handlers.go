@@ -11,11 +11,11 @@ import (
 const loginPath = "/login"
 
 var messageMap = map[string]string{
-	"NO_INPUT":"Please provide a username and a password",
-	"INVALID_INPUT":"Invalid username/password",
-	"TECHNICAL":"A technical error was encountered. Please try again later",
-	"INACTIVE_ACCOUNT":"The account is inactive",
-	"BLOCKED_ACCOUNT":"The account is blocked",
+	"NO_INPUT":         "Please provide a username and a password",
+	"INVALID_INPUT":    "Invalid username/password",
+	"TECHNICAL":        "A technical error was encountered. Please try again later",
+	"INACTIVE_ACCOUNT": "The account is inactive",
+	"BLOCKED_ACCOUNT":  "The account is blocked",
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -55,7 +55,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !user.IsActive() {
+	if user.IsInactive() {
 		sendError(w, http.StatusBadRequest, "INACTIVE_ACCOUNT")
 		return
 	}

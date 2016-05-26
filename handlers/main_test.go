@@ -64,8 +64,8 @@ func TestMain(m *testing.M) {
 	}
 
 	/*
-	Initializing data set
-	 */
+		Initializing data set
+	*/
 	initDataSet()
 
 	exitCode := m.Run()
@@ -109,7 +109,7 @@ func initDataSet() {
 		}
 		if index == 2 {
 			// user 3 is inactive
-			user3.SetActive(false)
+			user3.SetInactive(true)
 			if err := client.UpdateUserData(id, user3.UserData, tokenInfo); err != nil {
 				log.Fatalln("Error while updating user3", err)
 			}

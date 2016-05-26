@@ -1,19 +1,20 @@
 package handlers_test
 
 import (
-	"testing"
+	"encoding/json"
 	"net/http"
-	"github.com/eogile/agilestack-login-ui/handlers"
 	"net/http/httptest"
 	"net/url"
 	"strings"
-	"github.com/stretchr/testify/assert"
-	"encoding/json"
-	"github.com/stretchr/testify/require"
+	"testing"
+
+	"github.com/eogile/agilestack-login-ui/handlers"
 	"github.com/eogile/agilestack-utils/secu"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
-func TestLogin (t *testing.T) {
+func TestLogin(t *testing.T) {
 	form := url.Values{}
 	form.Add("username", user1.Login)
 	form.Add("password", user1.Password)
@@ -33,7 +34,7 @@ func TestLogin (t *testing.T) {
 	/*
 	 * Checking the location header
 	 */
-	 locationHeader := writer.Header().Get("Location")
+	locationHeader := writer.Header().Get("Location")
 	assert.Equal(t, "/login", locationHeader, "Invalid Location header")
 
 	var loginResponse handlers.LoginResponse
@@ -65,7 +66,7 @@ func TestLogin_NoInput(t *testing.T) {
 func TestLogin_InvalidInput(t *testing.T) {
 	form := url.Values{}
 	form.Add("username", user1.Login)
-	form.Add("password", user1.Password+ "hello")
+	form.Add("password", user1.Password+"hello")
 	writer := executeRequest(form)
 
 	/*
@@ -127,7 +128,7 @@ func validateUser(t *testing.T, expected, result *secu.User) {
 	require.Equal(t, "", result.Password)
 	require.Equal(t, expected.FirstName, result.FirstName)
 	require.Equal(t, expected.LastName, result.LastName)
-	require.Equal(t, expected.Active, result.Active)
+	require.Equal(t, expected.Inactive, result.Inactive)
 	require.Equal(t, expected.Blocked, result.Blocked)
 }
 
