@@ -1,7 +1,7 @@
 NAME		= login-ui
 IMAGE_NAME	= agilestack-$(NAME)
 
-GO_FILES=*.go
+GO_FILES=*.go */*.go
 JS_FILES=js/*.js js/*/*.js js/*/*/*.js
 
 

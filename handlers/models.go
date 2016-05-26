@@ -16,11 +16,11 @@ type (
 		Token *oauth2.Token `json:"token,omitempty"`
 
 		// Mandatory if success, nil otherwise
-		User    *secu.User `json:"user,omitempty"`
+		User *secu.User `json:"user,omitempty"`
 
-		Success bool       `json:"success"`
+		Success bool `json:"success"`
 
 		// Mandatory if not success, nil otherwise
-		Error *Error `json:"errorCode,omitempty"`
+		Error *Error `json:"error,omitempty"`
 	}
 )

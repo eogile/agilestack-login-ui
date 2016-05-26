@@ -1,7 +1,5 @@
 import {
-  CURRENT_USER_LOADING,
   CURRENT_USER_LOADED,
-  CURRENT_USER_ERROR,
   LOGOUT,
   CURRENT_USER,
   TOKEN_INFO
@@ -9,19 +7,16 @@ import {
 
 function loadInitialStateFromLocalStorage() {
 
-  const lsTokenInfo = localStorage && localStorage.getItem(TOKEN_INFO);
-  const tokenInfo = lsTokenInfo ? JSON.parse(lsTokenInfo) : null;
-
   const lsUser = localStorage && localStorage.getItem(CURRENT_USER);
   const user = lsUser ? JSON.parse(lsUser) : null;
 
+  const lsToken = localStorage && localStorage.getItem(TOKEN_INFO);
+  const token = lsToken ? JSON.parse(lsToken) : null;
+
   return {
-    loading: false,
-    error: null,
-    hasError: false,
     loggedIn: !!user,
     user,
-    tokenInfo,
+    token,
   }
 }
 
@@ -30,38 +25,23 @@ const initialState = loadInitialStateFromLocalStorage();
 export default function currentUserReducer(state = initialState, action = null) {
   Object.freeze(state);
   switch (action.type) {
-    case CURRENT_USER_LOADING:
-      return {
-        ...state,
-        loading: true,
-        tokenInfo: action.data,
-      };
     case CURRENT_USER_LOADED:
+      localStorage.setItem(CURRENT_USER, JSON.stringify(action.user));
+      localStorage.setItem(TOKEN_INFO, JSON.stringify(action.token));
       return {
         ...state,
-        loading: false,
-        error: null,
-        hasError: false,
         loggedIn: true,
-        user: action.data,
-      };
-    case CURRENT_USER_ERROR:
-      return {
-        ...state,
-        loading: false,
-        error: action.error,
-        hasError: true,
-        user: null,
+        user: action.user,
+        token: action.token
       };
     case LOGOUT:
+      localStorage.removeItem(TOKEN_INFO);
+      localStorage.removeItem(CURRENT_USER);
       return {
         ...state,
-        loading: false,
-        error: false,
-        hasError: false,
         loggedIn: false,
         user: null,
-        tokenInfo: null,
+        token: null,
       };
     default:
       return state;

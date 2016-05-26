@@ -1,45 +1,32 @@
 import {
   LOGIN_SUCCESS,
   LOGIN_ERROR,
-  SNACKBAR_CLOSE,
+  LOGIN_LOADING,
 } from '../constants/AppConstants';
 
 const initialState = {
-  error: null,
-  hasError: false,
   loading: false,
-  loggedin: false,
-  snackbarDisplayed: false,
-  tokenInfo: null,
+  error: null,
 };
 
 export default function loginReducer(state = initialState, action = null) {
   Object.freeze(state);
   switch (action.type) {
+    case LOGIN_LOADING:
+      return {
+        loading: true,
+      };
     case LOGIN_SUCCESS:
       return {
         ...state,
-        error: null,
-        hasError: false,
         loading: false,
-        loggedin: true,
-        snackbarDisplayed: true,
-        tokenInfo: action.data
+        error: null,
       };
     case LOGIN_ERROR:
       return {
         ...state,
-        error: action.error,
-        hasError: true,
         loading: false,
-        loggedin: false,
-        snackbarDisplayed: false,
-        tokenInfo: null,
-      };
-    case SNACKBAR_CLOSE:
-      return {
-        ...state,
-        snackbarDisplayed: false,
+        error: action.error,
       };
     default:
       return state;

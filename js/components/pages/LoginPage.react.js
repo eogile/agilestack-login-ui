@@ -5,22 +5,10 @@
 
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {push} from 'react-router-redux';
-import {Paper, Snackbar, FlatButton, Toolbar} from 'material-ui';
+import {Paper, FlatButton, Toolbar} from 'material-ui';
 import {Form} from 'formsy-react'
 import {FormsyText} from 'formsy-material-ui';
-import {asyncLogin, snackBarClose} from '../../actions/LoginActions';
-
-function buildState(props) {
-  const {callback} = props.params;
-  return {
-    login: '',
-    canLogin: false,
-    open: false,
-    hasError: false,
-    callback
-  };
-}
+import {asyncLogin} from '../../actions/LoginActions';
 
 class LoginPage extends Component {
 
@@ -37,53 +25,47 @@ class LoginPage extends Component {
 
   constructor(props) {
     super(props);
-    this.enableLogin = this.enableLogin.bind(this);
-    this.disableLogin = this.disableLogin.bind(this);
-    this.login = this.login.bind(this);
-    this.onSnackbarClose = this.onSnackbarClose.bind(this);
-    this.state = buildState(props);
+    const {callback} = props.params;
+    this.state = {
+      username: '',
+      password: '',
+      canSubmit: false,
+      callback
+    };
   }
 
-  enableLogin() {
+  enableLogin = () => {
     console.log('enableLogin');
-    const canLogin = true;
-    this.setState({canLogin})
-  }
+    this.setState({canSubmit: true})
+  };
 
-  disableLogin() {
+  disableLogin = () => {
     console.log('disableLogin');
-    this.setState({canLogin: false})
-  }
+    this.setState({canSubmit: false})
+  };
 
-  onChangeLogin(e) {
-    const login = e.target.value;
-    console.log('onChangeLogin', login);
-    this.setState({login})
-  }
+  onChangeUsername = (e) => {
+    const username = e.target.value;
+    console.log('onChangeUsername', username);
+    this.setState({username})
+  };
 
-  onChangePassword(e) {
+  onChangePassword = (e) => {
     const password = e.target.value;
     console.log('onChangePassword');
     this.setState({password})
-  }
+  };
 
-  login() {
-    const {dispatch} = this.props;
+  login = () => {
+    const {dispatch, params} = this.props;
+    const {username, password} = this.state;
     console.log('login ici');
-    dispatch(asyncLogin(this.state.login, this.state.password));
-  }
-
-  onSnackbarClose() {
-    const {dispatch, location} = this.props;
-    const {callback} = location.query;
-    console.log('in handleRequestClose - callback', callback);
-    dispatch(snackBarClose());
-    dispatch(push(callback || '/'));
-  }
+    dispatch(asyncLogin(username, password, params.callback));
+  };
 
   render() {
-    const {hasError, snackbarDisplayed} = this.props.login;
-    const {login, password, canLogin} = this.state;
+    const {error} = this.props.login;
+    const {username, password, canSubmit} = this.state;
     const styles = {
       fieldset: {
         display: 'flex',
@@ -131,9 +113,9 @@ class LoginPage extends Component {
       <div>
         <br/>
         <br/>
-        {hasError && (
+        {!!error && (
           <Toolbar style={styles.box}>
-            <span style={styles.errorMessages}> You provided the wrong username and password, please try again</span>
+            <span style={styles.errorMessages}>{error.defaultMessage}</span>
           </Toolbar>
         )}
         <Paper style={styles.box}>
@@ -144,16 +126,16 @@ class LoginPage extends Component {
             onValidSubmit={this.login}>
             <div style={styles.fieldset}>
               <FormsyText
-                key="login"
+                key="username"
                 style={styles.bigField}
-                name="login"
+                name="username"
                 required
                 formNoValidate
                 floatingLabelText="Email"
                 validations="isEmail,minLength:6"
                 validationErrors={this.emailErrorMessages}
-                value={login}
-                onChange={this.onChangeLogin.bind(this)}/>
+                value={username}
+                onChange={this.onChangeUsername}/>
               <FormsyText
                 key="password"
                 name="password"
@@ -164,7 +146,7 @@ class LoginPage extends Component {
                 validations="minLength:3"
                 validationErrors={this.passwordErrorMessages}
                 value={password}
-                onChange={this.onChangePassword.bind(this)}/>
+                onChange={this.onChangePassword}/>
             </div>
             <div style={styles.actionBar}>
               <FlatButton label="Cancel"/>
@@ -172,19 +154,16 @@ class LoginPage extends Component {
                 label="Login"
                 type="submit"
                 primary={true}
-                disabled={!canLogin}
+                disabled={!canSubmit}
               />
             </div>
           </Form>
-          <Snackbar
-            open={snackbarDisplayed}
-            message="Login successful"
-            autoHideDuration={1000}
-            onRequestClose={this.onSnackbarClose}/>
         </Paper>
       </div>
     );
   }
 }
 
-export default connect(state => ({login: state.login}))(LoginPage);
+export default connect(state => ({
+  login: state.login,
+}))(LoginPage);
