@@ -57,10 +57,11 @@ class LoginPage extends Component {
   };
 
   login = () => {
-    const {dispatch, params} = this.props;
+    const {dispatch, location} = this.props;
     const {username, password} = this.state;
-    console.log('login ici');
-    dispatch(asyncLogin(username, password, params.callback));
+    const {callback} = location.query;
+    console.log('login', callback, location);
+    dispatch(asyncLogin(username, password, callback));
   };
 
   render() {

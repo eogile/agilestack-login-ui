@@ -38,7 +38,7 @@ export function makeLoginBody(username, password) {
 }
 
 export function asyncLogin(username, password, callback) {
-  console.log('API_AUTH_URL:', API_AUTH_URL);
+  console.log('API_AUTH_URL:', API_AUTH_URL, ' callback:', callback);
   return dispatch => {
     dispatch(loginLoad());
     fetch(API_AUTH_URL, {
